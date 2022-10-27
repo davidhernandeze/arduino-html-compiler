@@ -1,0 +1,9 @@
+{
+  "scripts": {
+    "build": "node compiler.js ExampleSketch/webapp.h"
+  },
+  "dependencies": {
+    "@minify-html/node": "^0.10.2",
+    "html-minifier": "^4.0.0"
+  }
+}
