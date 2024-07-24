@@ -4,6 +4,8 @@
   },
   "dependencies": {
     "@minify-html/node": "^0.10.2",
-    "html-minifier": "^4.0.0"
+    "cheerio": "^1.0.0-rc.12",
+    "html-minifier": "^4.0.0",
+    "uglify-js": "^3.19.0"
   }
 }
