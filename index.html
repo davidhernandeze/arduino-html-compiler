@@ -1,40 +1,553 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Example HTML</title>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Led Points</title>
     <style>
-      body {
-        background-color: #1a598e;
-        color: whitesmoke;
-        font-family: Verdana, serif;
-        margin: 0;
-        padding: 0;
-        text-align: center;
-        font-size: 2rem;
-      }
-      .button {
-        margin: 2em;
-        padding: 1rem;
-        text-transform: uppercase;
-        border: none;
-        color: whitesmoke;
-        cursor: pointer;
-      }
+        body {
+            padding: 1rem 3rem 3rem;
+            background-color: #000000;
+            font-family: Verdana, serif;
+            margin: 0;
+            text-align: center;
+        }
+
+        *:focus {
+            outline: none !important
+        }
+
+        *:focus:not(:focus-visible) {
+            outline: none;
+        }
+
+        * {
+            -webkit-tap-highlight-color: rgba(0, 0, 0, 0) !important;
+        }
+
+        .config-btn {
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            padding: 1rem 1.3rem;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 1.8rem;
+            margin: 1rem 0;
+            cursor: pointer;
+            border-radius: 3rem;
+        }
+
+        .circle-btn {
+            border-radius: 100%;
+            border: none;
+            color: black;
+            padding: 0;
+            font-weight: bolder;
+            font-size: 3rem;
+            text-align: center;
+            text-decoration: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            width: 8rem;
+            height: 8rem;
+        }
+
+        .row {;
+            margin: 0 0 1rem 1rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        h1 {
+            color: white;
+        }
     </style>
-  </head>
-  <body>
-  <div>
-    <p>This is a basic html with CSS and JS</p>
-    <button id="change-color-button" class="button">Click me!</button>
-  </div>
-  </body>
-  <script>
-    const button = document.getElementById('change-color-button');
-    button.addEventListener('click', () => {
-      button.style.backgroundColor = button.style.backgroundColor === 'forestgreen' ? 'red' : 'forestgreen';
-    });
-    button.style.backgroundColor = 'forestgreen';
-  </script>
-</html>
+</head>
+<body>
+<h1>Led Points</h1>
+<div id="menu">
+    <button id="init-home-btn" class="config-btn">New Game - Home Serves</button>
+    <button id="init-guess-btn" class="config-btn">New Game - Guest Serves</button>
+</div>
+<div id="inGame" style="display: none">
+    <div class="row">
+        <button id="menu-btn" style="background-color: #ce5a76" class="circle-btn">
+            <svg width="4rem" height="4rem" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <g id="Interface / Exit">
+                    <path id="Vector"
+                          d="M12 15L15 12M15 12L12 9M15 12H4M4 7.24802V7.2002C4 6.08009 4 5.51962 4.21799 5.0918C4.40973 4.71547 4.71547 4.40973 5.0918 4.21799C5.51962 4 6.08009 4 7.2002 4H16.8002C17.9203 4 18.4796 4 18.9074 4.21799C19.2837 4.40973 19.5905 4.71547 19.7822 5.0918C20 5.5192 20 6.07899 20 7.19691V16.8036C20 17.9215 20 18.4805 19.7822 18.9079C19.5905 19.2842 19.2837 19.5905 18.9074 19.7822C18.48 20 17.921 20 16.8031 20H7.19691C6.07899 20 5.5192 20 5.0918 19.7822C4.71547 19.5905 4.40973 19.2839 4.21799 18.9076C4 18.4798 4 17.9201 4 16.8V16.75"
+                          stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </g>
+            </svg>
+        </button>
+        <button id="undo-btn" style="background-color: #debf6a" class="circle-btn">
+            <svg width="5rem" height="5rem" viewBox="-20 0 190 190" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" clip-rule="evenodd"
+                      d="M75.731 148.984C51.601 148.984 39.518 135.493 36.518 119.052L49.911 115.521C52.842 124.896 61.52 132.687 75.209 132.687C106.6 132.687 106.802 83.5787 74.659 83.5787C67.786 83.5787 61.694 84.7297 57.427 87.8287L81.116 95.7027L73.994 110.279L35.072 90.2057L53.535 46.4287L68.171 53.5597L57.085 72.2367C62.122 69.5007 67.995 67.7277 74.817 67.7277C128.313 67.7287 127.977 148.984 75.731 148.984Z"
+                      fill="#000000"/>
+            </svg>
+        </button>
+    </div>
+    <div class="row">
+        <button id="add-home-btn" style="background-color: #6b99c7" class="circle-btn">H+</button>
+        <button id="add-guess-btn" style="background-color: #8db4dc" class="circle-btn">G+</button>
+    </div>
+</div>
+</body>
+<script>
+  function addEventListenerToButton (buttonId, callback) {
+    document.getElementById(buttonId).addEventListener('click', callback)
+  }
+  addEventListenerToButton('init-home-btn', initHome)
+  addEventListenerToButton('init-guess-btn', initGuest)
+  addEventListenerToButton('menu-btn', menu)
+  addEventListenerToButton('undo-btn', undo)
+  addEventListenerToButton('add-home-btn', addHomeScore)
+  addEventListenerToButton('add-guess-btn', addGuestScore)
+
+  const colors = [
+    [0, 0, 0],
+    [255, 255, 255],
+    [255, 0, 0],
+    [255, 255, 0],
+    [255, 165, 0],
+    [0, 255, 0],
+    [0, 0, 255]
+  ]
+
+  function send (action, data) {
+    const request = new XMLHttpRequest()
+    request.open('POST', action, true)
+    request.onload = function () {
+      console.log(request.responseText)
+    }
+    request.onerror = function () {
+      console.log('error')
+    }
+    const form = new FormData()
+    form.append('data', data)
+    request.send(form)
+  }
+
+  function sendPixelData (pixels) {
+    send('pixels', pixels.flat() + ';')
+  }
+
+  function sendColorsData () {
+    send('colors', colors.flat() + ';')
+  }
+
+  class Game {
+    constructor () {
+      this.undoStack = []
+      this.state = {
+        homeScore: 0,
+        guestScore: 0,
+        homeGame: 0,
+        guestGame: 0,
+        homeSet: 0,
+        guestSet: 0,
+        homeService: false,
+        guestService: false,
+        homeFirstService: false
+      }
+    }
+
+    capturePoint () {
+      this.undoStack.push(JSON.stringify(this.state))
+    }
+
+    undo () {
+      if (this.undoStack.length === 1) return
+      const lastState = this.undoStack.pop()
+      const previousState = this.undoStack?.[this.undoStack.length - 1]
+      if (!previousState) return
+
+      this.state = JSON.parse(previousState)
+    }
+
+    changeServiceGame () {
+      if (this.state.homeService) {
+        this.setGuestService()
+      } else {
+        this.setHomeService()
+      }
+    }
+
+    changeServiceSet () {
+      if (this.state.homeFirstService) {
+        this.setGuestService()
+        this.state.homeFirstService = false
+      } else {
+        this.setHomeService()
+        this.state.homeFirstService = true
+      }
+    }
+
+    addGuestScore () {
+      if (this.state.guestSet === 3) return
+      if (this.state.guestScore !== 3) {
+        this.state.guestScore++
+        this.capturePoint()
+      } else if (this.state.guestGame !== 5) {
+        this.addGuestGame()
+      } else {
+        this.addGuestSet()
+      }
+    }
+
+    addHomeScore () {
+      if (this.state.homeSet === 3) return
+      if (this.state.homeScore !== 3) {
+        this.state.homeScore++
+        this.capturePoint()
+      } else if (this.state.homeGame !== 5) {
+        this.addHomeGame()
+      } else {
+        this.addHomeSet()
+      }
+    }
+
+    addGuestGame () {
+      this.state.guestGame++
+      this.resetScore()
+      this.changeServiceGame()
+      this.capturePoint()
+    }
+
+    addHomeGame () {
+      this.state.homeGame++
+      this.resetScore()
+      this.changeServiceGame()
+      this.capturePoint()
+    }
+
+    addGuestSet () {
+      this.state.guestSet++
+      this.resetScoreGame()
+      this.resetScore()
+      this.changeServiceSet()
+      this.capturePoint()
+    }
+
+    addHomeSet () {
+      this.state.homeSet++
+      this.resetScoreGame()
+      this.resetScore()
+      this.changeServiceSet()
+      this.capturePoint()
+    }
+
+    setGuestService () {
+      this.state.guestService = true
+      this.state.homeService = false
+    }
+
+    setHomeService () {
+      this.state.homeService = true
+      this.state.guestService = false
+    }
+
+    resetScore () {
+      this.state.homeScore = 0
+      this.state.guestScore = 0
+    }
+
+    resetScoreGame () {
+      this.state.homeGame = 0
+      this.state.guestGame = 0
+    }
+  }
+
+  class BoardPixels {
+    constructor () {
+      this.gameNumbers = [
+        [
+          [1, 1, 1],
+          [1, 0, 1],
+          [1, 0, 1],
+          [1, 0, 1],
+          [1, 1, 1]
+        ],
+        [
+          [1, 1, 0],
+          [0, 1, 0],
+          [0, 1, 0],
+          [0, 1, 0],
+          [1, 1, 1]
+        ],
+        [
+          [1, 1, 1],
+          [0, 0, 1],
+          [1, 1, 1],
+          [1, 0, 0],
+          [1, 1, 1]
+        ],
+        [
+          [1, 1, 1],
+          [0, 0, 1],
+          [1, 1, 1],
+          [0, 0, 1],
+          [1, 1, 1]
+        ],
+        [
+          [1, 0, 1],
+          [1, 0, 1],
+          [1, 1, 1],
+          [0, 0, 1],
+          [0, 0, 1]
+        ],
+        [
+          [1, 1, 1],
+          [1, 0, 0],
+          [1, 1, 1],
+          [0, 0, 1],
+          [1, 1, 1]
+        ],
+        [
+          [1, 1, 1],
+          [1, 0, 0],
+          [1, 1, 1],
+          [1, 0, 1],
+          [1, 1, 1]
+        ],
+        [
+          [1, 1, 1],
+          [0, 0, 1],
+          [0, 0, 1],
+          [0, 0, 1],
+          [0, 0, 1]
+        ],
+        [
+          [1, 1, 1],
+          [1, 0, 1],
+          [1, 1, 1],
+          [1, 0, 1],
+          [1, 1, 1]
+        ],
+        [
+          [1, 1, 1],
+          [1, 0, 1],
+          [1, 1, 1],
+          [0, 0, 1],
+          [1, 1, 1]
+        ]
+      ]
+      this.scoreNumbers = {
+        0: [
+          [1, 1, 1, 0, 1, 1, 1],
+          [1, 0, 1, 0, 1, 0, 1],
+          [1, 0, 1, 0, 1, 0, 1],
+          [1, 0, 1, 0, 1, 0, 1],
+          [1, 0, 1, 0, 1, 0, 1],
+          [1, 0, 1, 0, 1, 0, 1],
+          [1, 1, 1, 0, 1, 1, 1]
+        ],
+        15: [
+          [1, 1, 0, 0, 1, 1, 1],
+          [0, 1, 0, 0, 1, 0, 0],
+          [0, 1, 0, 0, 1, 0, 0],
+          [0, 1, 0, 0, 1, 1, 1],
+          [0, 1, 0, 0, 0, 0, 1],
+          [0, 1, 0, 0, 0, 0, 1],
+          [1, 1, 1, 0, 1, 1, 1]
+        ],
+        30: [
+          [1, 1, 1, 0, 1, 1, 1],
+          [0, 0, 1, 0, 1, 0, 1],
+          [0, 0, 1, 0, 1, 0, 1],
+          [1, 1, 1, 0, 1, 0, 1],
+          [0, 0, 1, 0, 1, 0, 1],
+          [0, 0, 1, 0, 1, 0, 1],
+          [1, 1, 1, 0, 1, 1, 1]
+        ],
+        40: [
+          [1, 0, 1, 0, 1, 1, 1],
+          [1, 0, 1, 0, 1, 0, 1],
+          [1, 0, 1, 0, 1, 0, 1],
+          [1, 1, 1, 0, 1, 0, 1],
+          [0, 0, 1, 0, 1, 0, 1],
+          [0, 0, 1, 0, 1, 0, 1],
+          [0, 0, 1, 0, 1, 1, 1]
+        ]
+      }
+      this.letterS = [
+        [1, 1],
+        [1, 0],
+        [1, 1],
+        [0, 1],
+        [1, 1]
+      ]
+      this.letterE = [
+        [1, 1],
+        [1, 0],
+        [1, 1],
+        [1, 0],
+        [1, 1]
+      ]
+      this.letterT = [
+        [1, 1, 1],
+        [0, 1, 0],
+        [0, 1, 0],
+        [0, 1, 0],
+        [0, 1, 0]
+      ]
+      this.pointsToScore = {
+        0: this.scoreNumbers[0],
+        1: this.scoreNumbers[15],
+        2: this.scoreNumbers[30],
+        3: this.scoreNumbers[40]
+      }
+      this.mapSetHome = {
+        0: [
+          [0, 0, 0, 0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0, 0, 0, 0]
+        ],
+        1: [
+          [0, 0, 0, 0, 0, 0, 1, 1],
+          [0, 0, 0, 0, 0, 0, 1, 1]
+        ],
+        2: [
+          [0, 0, 0, 1, 1, 0, 1, 1],
+          [0, 0, 0, 1, 1, 0, 1, 1]
+        ],
+        3: [
+          [1, 1, 0, 1, 1, 0, 1, 1],
+          [1, 1, 0, 1, 1, 0, 1, 1]
+        ],
+      }
+      this.mapSetGuest = {
+        0: [
+          [0, 0, 0, 0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0, 0, 0, 0]
+        ],
+        1: [
+          [1, 1, 0, 0, 0, 0, 0, 0],
+          [1, 1, 0, 0, 0, 0, 0, 0]
+        ],
+        2: [
+          [1, 1, 0, 1, 1, 0, 0, 0],
+          [1, 1, 0, 1, 1, 0, 0, 0]
+        ],
+        3: [
+          [1, 1, 0, 1, 1, 0, 1, 1],
+          [1, 1, 0, 1, 1, 0, 1, 1]
+        ],
+      }
+      this.pixelCanvas = Array.from(Array(16), () =>
+        Array.from(Array(32), () => 0))
+    }
+
+    gameToPixels (game) {
+      // draw SET
+      this.drawInPosition(12, 10, this.letterS, 1)
+      this.drawInPosition(15, 10, this.letterE, 1)
+      this.drawInPosition(18, 10, this.letterT, 1)
+
+      // dived line
+      this.drawRect(15, 0, 2, 9, 1)
+
+      // score point
+      this.drawInPosition(2, 2, this.pointsToScore[game.state.homeScore], 3)
+      this.drawInPosition(23, 2, this.pointsToScore[game.state.guestScore], 3)
+
+      // score game
+      this.drawInPosition(11, 1, this.gameNumbers[game.state.homeGame], 4)
+      this.drawInPosition(18, 1, this.gameNumbers[game.state.guestGame], 4)
+
+      // score set
+      this.drawInPosition(1, 13, this.mapSetHome[game.state.homeSet], 4)
+      this.drawInPosition(23, 13, this.mapSetGuest[game.state.guestSet], 4)
+
+      // service
+      if (game.state.homeService) {
+        this.drawRect(12, 7, 1, 1, 5)
+        this.drawRect(19, 7, 1, 1, 0)
+      } else {
+        this.drawRect(12, 7, 1, 1, 0)
+        this.drawRect(19, 7, 1, 1, 5)
+      }
+      return this.pixelCanvas
+    }
+
+    drawInPosition (x, y, pixels, color) {
+      for (let i = y; i < y + pixels.length; i++) {
+        for (let j = x; j < x + pixels[0].length; j++) {
+          if (pixels[i - y][j - x] !== 0) {
+            this.pixelCanvas[i][j] = color
+          } else {
+            this.pixelCanvas[i][j] = 0
+          }
+        }
+      }
+    }
+
+    drawRect (x, y, width, heigth, color) {
+      for (let i = y; i < y + heigth; i++) {
+        for (let j = x; j < x + width; j++) {
+          this.pixelCanvas[i][j] = color
+        }
+      }
+    }
+  }
+
+  let game
+  let board
+
+  function initGame () {
+    game = new Game()
+    board = new BoardPixels()
+  }
+
+  function initHome () {
+    document.getElementById('menu').style.display = 'none'
+    document.getElementById('inGame').style.display = 'block'
+    initGame()
+    game.setHomeService()
+    game.state.homeFirstService = true
+    game.capturePoint()
+    sendPixelData(board.gameToPixels(game))
+    sendColorsData()
+  }
+
+  function initGuest () {
+    document.getElementById('menu').style.display = 'none'
+    document.getElementById('inGame').style.display = 'block'
+    initGame()
+    game.setGuestService()
+    game.state.homeFirstService = false
+    game.capturePoint()
+    sendPixelData(board.gameToPixels(game))
+    sendColorsData()
+  }
+
+  // add - reduce - reset Scoreboards
+
+  function addGuestScore () {
+    game.addGuestScore()
+    sendPixelData(board.gameToPixels(game))
+  }
+
+  function addHomeScore () {
+    game.addHomeScore()
+    sendPixelData(board.gameToPixels(game))
+  }
+
+  function undo () {
+    game.undo()
+    sendPixelData(board.gameToPixels(game))
+  }
+
+  function menu () {
+    document.getElementById('menu').style.display = 'block'
+    document.getElementById('inGame').style.display = 'none'
+  }
+
+</script>

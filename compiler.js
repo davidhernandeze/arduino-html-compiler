@@ -3,7 +3,7 @@ const cheerio = require('cheerio');
 const minify = require('html-minifier').minify;
 const UglifyJS = require("uglify-js");
 
-const htmlContent = fs.readFileSync('index.html');
+const htmlContent = fs.readFileSync(process.argv[2]);
 const $ = cheerio.load(htmlContent);
 
 let scriptContent = '';
@@ -33,14 +33,12 @@ const result = minify($.root().html(), {
   collapseWhitespace: true
 });
 
-console.log(result);
+const varName = process.argv[4] || 'html'
+const compiledFile = `const char *${varName} = R"literal(${result})literal";`
 
-const scapeResult = result.replaceAll('"', '\\"')
-const compiledFile = 'String app = "' + scapeResult + '";';
-
-if (!fs.existsSync(process.argv[2])) {
-  console.log('ERROR: Output file doesn\'t exists');
-  return;
+const outputFile = process.argv[3] || 'index.h'
+if (!fs.existsSync('output')) {
+  fs.mkdirSync('output')
 }
 
-fs.writeFileSync(process.argv[2], compiledFile)
+fs.writeFileSync('output/' + outputFile, compiledFile)

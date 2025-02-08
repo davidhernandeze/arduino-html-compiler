@@ -22,7 +22,6 @@ You need to copy `package.json`, `compiler.js` and `index.html` somewhere in you
   ```sh
   npm install
   ```
-* Change the `build` script under `package.json` to match your desired output file
 
 <!-- USAGE EXAMPLES -->
 ## Usage
@@ -30,6 +29,10 @@ You need to copy `package.json`, `compiler.js` and `index.html` somewhere in you
 * Compile the file
   ```sh
   npm run build
+  ```
+  Using options
+    ```sh
+  npm run build index.html output.h app
   ```
 It will generates an output file with the following content:
   ```c++
